@@ -1,0 +1,33 @@
+//reset
+body {
+    margin: 0;
+}
+
+.page {
+    width: 100vw;
+    height: 100vh;
+    background-color: lightgray;
+    
+    .list-panel {
+        position: absolute;
+        background: white;
+        border: 1px gray solid;
+        border-radius: 5px;
+        
+        top: 10px;
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+
+        padding: 10px;
+        overflow-y: scroll;
+    }
+
+    .list-item {
+        padding: 5px;
+        border: solid 1px rgb(201, 201, 201);
+        border-radius: 3px;
+        margin: 5px 0;
+        font-size: small;
+    }
+}
