@@ -21,7 +21,7 @@ function collect(connect, monitor) {
 }
 
 @DragSource("drag-item", ItemSource, collect)
-export default class ListItem extends React.Component {  
+export default class ListItem extends React.PureComponent {
     render() {
         const { connectDragSource, data, genItemBoundingData, isDragging } = this.props;
 
