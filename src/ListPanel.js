@@ -15,21 +15,21 @@ const ListPanelTarget = {
         component.setOrder();
     },
     hover(props, monitor, component) {
-        const { index: oldIndex } = monitor.getItem();
+        const { index: indexWhenDragBegin } = monitor.getItem();
         const { x: offsetX, y: offsetY } = monitor.getClientOffset();
 
         // component.changeOrder
-        // console.log(oldIndex);
+        // console.log(indexWhenDragBegin);
         // console.log(component.itemBoundingData);
 
         component.itemBoundingData.forEach((item, index) => {
-            if (isHoverOverBox(offsetX, offsetY, item) /*&& oldIndex !== index*/ && component.nextIndex !== index) {
-                const prevIndex = component.nextIndex == null ? oldIndex : component.nextIndex;
+            if (isHoverOverBox(offsetX, offsetY, item) && component.nextIndex !== index) {
+                const prevIndex = component.nextIndex == null ? indexWhenDragBegin : component.nextIndex;
 
                 const prevHeight = component.itemBoundingData[prevIndex].height;
                 const nextHeight = component.itemBoundingData[index].height;
 
-                // console.log("oldIndex:", oldIndex, "   prevIndex:", prevIndex, "   nextIndex:", index);
+                // console.log("indexWhenDragBegin:", indexWhenDragBegin, "   prevIndex:", prevIndex, "   nextIndex:", index);
                 // console.log("prevHeight:", prevHeight, "   nextHeight:", nextHeight);
 
                 if (prevHeight < nextHeight) {
@@ -41,15 +41,15 @@ const ListPanelTarget = {
                             bottom: component.itemBoundingData[index].top + nextHeight
                         };
                     if (isHoverOverBox(offsetX, offsetY, box)) {
-                        console.log("oldIndex:", oldIndex, "   prevIndex:", prevIndex, "   nextIndex:", index);
-                        component.nextIndex = index;
+                        console.log("indexWhenDragBegin:", indexWhenDragBegin, "   prevIndex:", prevIndex, "   nextIndex:", index);
                         // console.log("change");
-                        component.changeOrder(oldIndex);
+                        component.nextIndex = index;
+                        component.changeOrder(indexWhenDragBegin);
                     }
                 } else {
                     component.nextIndex = index;
-                    console.log("oldIndex:", oldIndex, "   prevIndex:", prevIndex, "   nextIndex:", index);
-                    component.changeOrder(oldIndex);
+                    console.log("indexWhenDragBegin:", indexWhenDragBegin, "   prevIndex:", prevIndex, "   nextIndex:", index);
+                    component.changeOrder(indexWhenDragBegin);
                 }
             }
         });
@@ -77,11 +77,11 @@ export default class ListPanel extends React.PureComponent {
         };
     }
 
-    changeOrder(oldIndex) {
+    changeOrder(indexWhenDragBegin) {
         // if (this.prevIndex !== this.nextIndex) {
-        //     console.log(oldIndex, this.nextIndex);
+        //     console.log(indexWhenDragBegin, this.nextIndex);
             const order = this.order.slice();
-            const item = order.splice(oldIndex, 1)[0];
+            const item = order.splice(indexWhenDragBegin, 1)[0];
             order.splice(this.nextIndex, 0, item);
 
             this.setState({
