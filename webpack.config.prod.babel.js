@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpackConfig = require("./webpack.config.common.babel.js");
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: ["babel-loader", "eslint-loader"]
+                use: ["babel-loader"]
             }
         ])
     },
@@ -21,6 +22,10 @@ module.exports = {
                 warnings: false,
                 drop_console: false,
             }
-        })
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/index.html.ejs',
+            hash: true
+        }),
     ])
 };

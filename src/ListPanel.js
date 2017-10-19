@@ -4,16 +4,13 @@ import { DropTarget } from "react-dnd";
 import { findDOMNode } from "react-dom";
 import ListItem from "./ListItem";
 
-function isHoverOverBox(x, y, rect) {
-    const { top, bottom, left, right } = rect;
+function isHoverOverBox(x, y, box) {
+    const { top, bottom, left, right } = box;
     return x > left && x < right && y > top && y < bottom;
 }
 
-let indexHistory;
-
 const ListPanelTarget = {
     drop(props, monitor, component) {
-        component.prevIndex = null;
         component.nextIndex = null;
         component.setOrder();
     },
@@ -27,17 +24,7 @@ const ListPanelTarget = {
 
         component.itemBoundingData.forEach((item, index) => {
             if (isHoverOverBox(offsetX, offsetY, item) /*&& oldIndex !== index*/ && component.nextIndex !== index) {
-                // console.log(index);
-                // if (component.prevIndex == null) {
-                //     component.prevIndex = oldIndex;
-                // } else {
-                //     component.prevIndex = component.nextIndex;
-                // }
-                //
-                // component.nextIndex = index;
-                // console.log("oldIndex:", oldIndex, "   prevIndex:", component.prevIndex, "   nextIndex:", component.nextIndex);
-
-                const prevIndex = component.prevIndex == null ? oldIndex : component.nextIndex;
+                const prevIndex = component.nextIndex == null ? oldIndex : component.nextIndex;
 
                 const prevHeight = component.itemBoundingData[prevIndex].height;
                 const nextHeight = component.itemBoundingData[index].height;
@@ -54,17 +41,14 @@ const ListPanelTarget = {
                             bottom: component.itemBoundingData[index].top + nextHeight
                         };
                     if (isHoverOverBox(offsetX, offsetY, box)) {
-                        component.prevIndex = prevIndex;
+                        console.log("oldIndex:", oldIndex, "   prevIndex:", prevIndex, "   nextIndex:", index);
                         component.nextIndex = index;
-                        console.log("oldIndex:", oldIndex, "   prevIndex:", component.prevIndex, "   nextIndex:", component.nextIndex);
-                        // console.log(box);
                         // console.log("change");
                         component.changeOrder(oldIndex);
                     }
                 } else {
-                    component.prevIndex = prevIndex;
                     component.nextIndex = index;
-                    console.log("oldIndex:", oldIndex, "   prevIndex:", component.prevIndex, "   nextIndex:", component.nextIndex);
+                    console.log("oldIndex:", oldIndex, "   prevIndex:", prevIndex, "   nextIndex:", index);
                     component.changeOrder(oldIndex);
                 }
             }
@@ -82,7 +66,6 @@ function collect(connect, monitor) {
 @DropTarget("drag-item", ListPanelTarget, collect)
 export default class ListPanel extends React.PureComponent {
     itemBoundingData = [];
-    prevIndex = null;
     nextIndex = null;
 
     constructor(props) {

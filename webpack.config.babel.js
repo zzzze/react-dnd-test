@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.common.babel.js");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
@@ -35,6 +36,9 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             "process.env.NODE_ENV": '"development"',
-        })
+        }),
+        new HtmlWebpackPlugin({
+            template: 'src/index.html.ejs',
+        }),
     ])
 };
